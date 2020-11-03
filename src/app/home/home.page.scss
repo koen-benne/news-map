@@ -28,5 +28,25 @@
 
 .match-parent {
   width: 100%;
+  height: 70%;
+}
+
+#filter-menu {
+  height: 30%;
+}
+
+#filter-menu ion-grid {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#filter-menu ion-row {
+
+}
+
+#filter-menu ion-col {
+  display: flex;
+  justify-content: space-evenly;
 }

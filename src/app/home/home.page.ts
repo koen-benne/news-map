@@ -18,6 +18,7 @@ export class HomePage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
   }
 
@@ -26,12 +27,16 @@ export class HomePage implements OnInit {
       accessToken: environment.mapbox.accessToken,
       container: 'map',
       style: this.style,
-      zoom: 13,
       center: [this.lng, this.lat],
       bounds: [[3, 50.2], [7.6, 53.8]],
     });
+    // disable map rotation
+    this.map.dragRotate.disable();
+    this.map.touchZoomRotate.disableRotation();
 
+    // Set max scroll of map to fit the Netherlands
     this.map.setMaxBounds(this.map.getBounds());
+    this.map.setZoom(6.5);
   }
 
 }
