@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import { transition } from '../animations/news';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  animation = transition;
 
-  constructor() {}
-
+  constructor(private http: HttpClient) {}
 }
