@@ -1,6 +1,7 @@
+import {HttpClient} from '@angular/common/http';
+import { transition } from '../animations/news';
 import { Component, OnInit} from '@angular/core';
 import { environment } from '../../environments/environment';
-
 import * as mapboxgl from 'mapbox-gl';
 
 @Component({
@@ -10,12 +11,14 @@ import * as mapboxgl from 'mapbox-gl';
 })
 
 export class HomePage implements OnInit {
+  animation = transition;
+
   map: mapboxgl.Map;
   style = 'mapbox://styles/mapbox/streets-v11';
 
   lat = 52;
   lng = 5.5;
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
@@ -38,6 +41,5 @@ export class HomePage implements OnInit {
     this.map.setMaxBounds(this.map.getBounds());
     this.map.setZoom(6.5);
   }
-
 }
 
