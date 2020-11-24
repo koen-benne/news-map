@@ -62,7 +62,12 @@ export class HomePage implements OnInit {
     geojson.features.forEach((addMarker) => {
       // Create a DIV for each feature
       let el = document.createElement('div');
-      el.className = 'marker';
+      el.className = 'mapboxgl-marker';
+      el.style.width = '50px';
+      el.style.height = '50px';
+      el.style.backgroundImage = 'url(../../assets/icon/favicon.png)';
+      el.style.backgroundSize = 'cover';
+      el.style.cursor = 'Pointer';
 
       console.log(addMarker.geometry.coordinates);
       // Add marker for each feature and add to map
