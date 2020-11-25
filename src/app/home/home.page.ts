@@ -83,8 +83,8 @@ export class HomePage implements OnInit {
 
       // Add event that opens popup on click
       el.addEventListener('click', () => {
-        let content = '<div><strong>' + addMarker.properties.title + '</strong>' + 
-                      '<p>' + addMarker.properties.description + '</p></div>';
+        let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' + 
+                      '<ion-card-content>' + addMarker.properties.description + '</ion-card-content>';
 
         let info = document.getElementById('info')
         info.innerHTML = content;

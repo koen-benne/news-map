@@ -61,17 +61,13 @@
   cursor: pointer;
 }
 
+.popup {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  }
+
 .info {
   display: none;
-  position:absolute;
-  top:15px;
-  background:#fff;
-  padding:10px;
-  border-radius:3px;
-  }
-  
-.info div {
-  background:#fff;
-  padding:10px;
-  border-radius:3px;
-  }
+}
+
