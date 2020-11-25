@@ -55,6 +55,17 @@ export class HomePage implements OnInit {
             title: 'Mapbox',
             description: 'test'
           }
+        },
+          {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [5.5, 52]
+          },
+          properties: {
+            title: 'test',
+            description: 'test 2'
+          }
         }]
     };
 
@@ -62,14 +73,30 @@ export class HomePage implements OnInit {
     geojson.features.forEach((addMarker) => {
       // Create a DIV for each feature
       let el = document.createElement('div');
-      el.className = 'mapboxgl-marker';
-      el.style.width = '50px';
-      el.style.height = '50px';
+      el.id = 'marker';
+      el.className = 'marker';
+      el.style.width = '25px';
+      el.style.height = '25px';
       el.style.backgroundImage = 'url(../../assets/icon/favicon.png)';
       el.style.backgroundSize = 'cover';
       el.style.cursor = 'Pointer';
 
-      console.log(addMarker.geometry.coordinates);
+      // Add event that opens popup on click
+      el.addEventListener('click', () => {
+        let content = '<div><strong>' + addMarker.properties.title + '</strong>' + 
+                      '<p>' + addMarker.properties.description + '</p></div>';
+
+        let info = document.getElementById('info')
+        info.innerHTML = content;
+        info.style.display = 'block';
+      });
+
+      // Hide popup on map movement
+      this.map.on('move', () => {
+        let info = document.getElementById('info');
+        info.style.display = 'none';
+      })
+
       // Add marker for each feature and add to map
       new mapboxgl.Marker(el)
         .setLngLat(addMarker.geometry.coordinates)

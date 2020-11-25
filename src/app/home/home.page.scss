@@ -52,7 +52,7 @@
   justify-content: space-evenly;
 }
 
-.mapboxgl-marker {
+.marker {
   background-image: url(../../assets/icon/favicon.png);
   background-size: cover;
   width: 50px;
@@ -60,3 +60,18 @@
   border-radius: 50%;
   cursor: pointer;
 }
+
+.info {
+  display: none;
+  position:absolute;
+  top:15px;
+  background:#fff;
+  padding:10px;
+  border-radius:3px;
+  }
+  
+.info div {
+  background:#fff;
+  padding:10px;
+  border-radius:3px;
+  }
