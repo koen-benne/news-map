@@ -65,9 +65,12 @@
   position: absolute;
   top: 0px;
   width: 100%;
+  height: 20%;
   }
 
 .info {
   display: none;
+  max-height: 100%;
+  overflow-y: auto;
 }
 

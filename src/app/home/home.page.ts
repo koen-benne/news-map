@@ -4,6 +4,8 @@ import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import { decimalDigest } from '@angular/compiler/src/i18n/digest';
 
+import * as feed from '../../assets/news-feed.json';
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -43,31 +45,7 @@ export class HomePage implements OnInit {
 
   private loadMarkers() {
     // Load data to geojson
-    let geojson = {
-      type: 'FeatureCollection',
-        features: [{
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [4.895167899999933, 52.3702157]
-          },
-          properties: {
-            title: 'Mapbox',
-            description: 'test'
-          }
-        },
-          {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [5.5, 52]
-          },
-          properties: {
-            title: 'test',
-            description: 'test 2'
-          }
-        }]
-    };
+    let geojson = feed.news;
 
     // Add markers
     geojson.features.forEach((addMarker) => {
