@@ -64,15 +64,18 @@ export class HomePage implements OnInit {
         let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' + 
                       '<ion-card-content><ion-nav-link><a href=\"' + addMarker.properties.link + '\">Lees meer...</a></ion-nav-link></ion-card-content>';
 
-        let info = document.getElementById('info')
+        let info = document.getElementById('info');
         info.innerHTML = content;
-        info.style.display = 'block';
+
+        // Opens popup
+        let popup = document.getElementById('popup');
+        popup.style.display = 'block';
       });
 
       // Hide popup on map movement
       this.map.on('move', () => {
-        let info = document.getElementById('info');
-        info.style.display = 'none';
+        let popup = document.getElementById('popup');
+        popup.style.display = 'none';
       })
 
       // Add marker for each feature and add to map
