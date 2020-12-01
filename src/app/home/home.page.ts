@@ -55,14 +55,14 @@ export class HomePage implements OnInit {
       el.className = 'marker';
       el.style.width = '25px';
       el.style.height = '25px';
-      el.style.backgroundImage = 'url(../../assets/icon/favicon.png)';
+      el.style.backgroundImage = ('url(../../assets/icon/categories/'+ addMarker.properties.categories[0] +'.svg)');
       el.style.backgroundSize = 'cover';
       el.style.cursor = 'Pointer';
 
       // Add event that opens popup on click
       el.addEventListener('click', () => {
         let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' + 
-                      '<ion-card-content>' + addMarker.properties.description + '</ion-card-content>';
+                      '<ion-card-content><ion-nav-link><a href=\"' + addMarker.properties.link + '\">Lees meer...</a></ion-nav-link></ion-card-content>';
 
         let info = document.getElementById('info')
         info.innerHTML = content;
