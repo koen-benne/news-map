@@ -1,32 +1,28 @@
 <ion-content>
-  <div id="map" class="match-parent"></div>
+  <div id="map"></div>
 
   <div id="filter-menu">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div id="filter-categories">
+        <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable ripple-parent"
+             [class.selected-category]="selectedCategory.id === category.id">
+          <p>{{ category.name }}</p>
+            <ion-ripple-effect *ngIf="!this.platform.is('ios')"></ion-ripple-effect>
+        </div>
+    </div>
+    <div id="filter-switches">
+        <div class="filter-switch">
+            <p>{{ this.selectedCategory.filters[0] }}</p>
+            <ion-toggle></ion-toggle>
+        </div>
+        <div class="filter-switch">
+            <p>{{ this.selectedCategory.filters[1] }}</p>
+            <ion-toggle></ion-toggle>
+        </div>
+        <div class="filter-switch">
+            <p>{{ this.selectedCategory.filters[2] }}</p>
+            <ion-toggle></ion-toggle>
+        </div>
+    </div>
+
   </div>
 </ion-content>
