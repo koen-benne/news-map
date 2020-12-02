@@ -5,12 +5,12 @@ import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-map',
+  templateUrl: 'map.page.html',
+  styleUrls: ['map.page.scss'],
 })
 
-export class HomePage implements OnInit {
+export class MapPage implements OnInit {
   animation = transition;
 
   map: mapboxgl.Map;

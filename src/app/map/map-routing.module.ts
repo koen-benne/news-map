@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { NewsPage } from './news.page';
-import {MapPage} from '../map/map.page';
+import { RouterModule, Routes } from '@angular/router';
+import { MapPage } from './map.page';
 
 const routes: Routes = [
   {
@@ -10,7 +8,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: NewsPage,
+        component: MapPage,
       },
       {
         path: 'article',
@@ -22,6 +20,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
-export class NewsPageRoutingModule {}
+export class MapPageRoutingModule {}
