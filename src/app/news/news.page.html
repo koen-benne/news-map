@@ -1,15 +1,3 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="home" [routerAnimation]="animation" icon="chevron-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Artikel</ion-title>
-  </ion-toolbar>
-</ion-header>
 <ion-content>
-  <article id="article">
-    <h2>{{ article.title }}</h2>
-    <ion-img [src]="article.urlToImage"></ion-img>
-    <p>{{ article.content }}</p>
-  </article>
+  <ion-button [routerAnimation]="animation" [routerLink]="['/tabs/news/article']">Article</ion-button>
 </ion-content>
