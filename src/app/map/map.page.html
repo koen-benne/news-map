@@ -10,17 +10,9 @@
         </div>
     </div>
     <div id="filter-switches">
-        <div class="filter-switch">
-            <p>{{ this.selectedCategory.filters[0] }}</p>
-            <ion-toggle></ion-toggle>
-        </div>
-        <div class="filter-switch">
-            <p>{{ this.selectedCategory.filters[1] }}</p>
-            <ion-toggle></ion-toggle>
-        </div>
-        <div class="filter-switch">
-            <p>{{ this.selectedCategory.filters[2] }}</p>
-            <ion-toggle></ion-toggle>
+        <div class="filter-switch" *ngFor="let filter of this.selectedCategory.filters">
+            <ion-icon [name]="filter.iconUrl"></ion-icon>
+            <ion-toggle checked="true"></ion-toggle>
         </div>
     </div>
 
