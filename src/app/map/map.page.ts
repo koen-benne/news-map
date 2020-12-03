@@ -20,11 +20,17 @@ export class MapPage implements OnInit {
   lat = 52;
   lng = 5.5;
 
+  filters = [
+      new Filter(0, 'cool', 'american-football-outline'),
+      new Filter(1, 'sick', 'business-outline'),
+      new Filter(2, 'epic', 'earth-outline'),
+  ];
+
   categories = [
-      new Category(0, 'Sport', ['s1', 's2', 's3']),
-      new Category(1, 'Cultuur', ['c1', 'c2', 'c3']),
-      new Category(2, '112', ['11', '12', '13']),
-      new Category(3, 'Politiek', ['p1', 'p2', 'p3']),
+      new FilterCategory(0, 'Sport', [this.filters[0], this.filters[1], this.filters[2]]),
+      new FilterCategory(1, 'Cultuur', [this.filters[1], this.filters[0], this.filters[2]]),
+      new FilterCategory(2, '112', [this.filters[0], this.filters[2], this.filters[1]]),
+      new FilterCategory(3, 'Politiek', [this.filters[2], this.filters[0], this.filters[1]]),
   ];
   selectedCategory = this.categories[0];
 
@@ -64,14 +70,26 @@ export class MapPage implements OnInit {
   }
 }
 
-export class Category {
+class FilterCategory {
   id: number;
   name: string;
-  filters: string[];
+  filters: Filter[];
 
-  constructor(id: number, name: string, filters: string[]) {
+  constructor(id: number, name: string, filters: Filter[]) {
     this.id = id;
     this.name = name;
     this.filters = filters;
+  }
+}
+
+class Filter {
+  id: number;
+  name: string;
+  iconUrl: string;
+
+  constructor(id: number, name: string, iconUrl: string) {
+    this.id = id;
+    this.name = name;
+    this.iconUrl = iconUrl;
   }
 }
