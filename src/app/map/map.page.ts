@@ -1,24 +1,27 @@
+import {HttpClient} from '@angular/common/http';
+import { transition } from '../animations/news';
 import { Component, OnInit} from '@angular/core';
 import { environment } from '../../environments/environment';
-
 import * as mapboxgl from 'mapbox-gl';
 import { decimalDigest } from '@angular/compiler/src/i18n/digest';
 
 import * as feed from '../../assets/news-feed.json';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+  selector: 'app-map',
+  templateUrl: 'map.page.html',
+  styleUrls: ['map.page.scss'],
 })
 
-export class HomePage implements OnInit {
+export class MapPage implements OnInit {
+  animation = transition;
+
   map: mapboxgl.Map;
   style = 'mapbox://styles/mapbox/streets-v11';
 
   lat = 52;
   lng = 5.5;
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
