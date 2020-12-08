@@ -3,6 +3,8 @@ import { transition } from '../animations/news';
 import { Component, OnInit} from '@angular/core';
 import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
+import { decimalDigest } from '@angular/compiler/src/i18n/digest';
+import * as feed from '../../assets/news-feed.json';
 
 @Component({
   selector: 'app-map',
