@@ -3,7 +3,6 @@ import { transition } from '../animations/news';
 import { Component, OnInit} from '@angular/core';
 import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
-import {Platform} from '@ionic/angular';
 
 @Component({
   selector: 'app-map',
@@ -34,7 +33,7 @@ export class MapPage implements OnInit {
   ];
   selectedCategory = this.categories[0];
 
-  constructor(private http: HttpClient, public platform: Platform) { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
