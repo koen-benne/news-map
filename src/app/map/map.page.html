@@ -3,10 +3,9 @@
 
   <div id="filter-menu">
     <div id="filter-categories">
-        <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable ripple-parent"
+        <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable"
              [class.selected-category]="selectedCategory.id === category.id">
           <p>{{ category.name }}</p>
-            <ion-ripple-effect *ngIf="!this.platform.is('ios')"></ion-ripple-effect>
         </div>
     </div>
     <div id="filter-switches">
