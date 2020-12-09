@@ -1,35 +1,22 @@
 <ion-content>
-  <div id="map" class="match-parent"></div>
+  <div id="map"></div>
   <div id="popup" class="popup">
     <ion-card id="info" class="info"></ion-card>
   </div>
 
   <div id="filter-menu">
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-        <ion-col>
-          <ion-toggle></ion-toggle>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div id="filter-categories">
+        <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable"
+             [class.selected-category]="selectedCategory.id === category.id">
+          <p>{{ category.name }}</p>
+        </div>
+    </div>
+    <div id="filter-switches">
+        <div class="filter-switch" *ngFor="let filter of this.selectedCategory.filters">
+            <ion-icon [name]="filter.iconUrl"></ion-icon>
+            <ion-toggle checked="true"></ion-toggle>
+        </div>
+    </div>
+
   </div>
 </ion-content>
