@@ -13,6 +13,7 @@ import * as feed from '../../assets/news-feed.json';
 })
 
 export class MapPage implements OnInit {
+  // Custom animation for transition
   animation = transition;
 
   map: mapboxgl.Map;
@@ -21,17 +22,27 @@ export class MapPage implements OnInit {
   lat = 52;
   lng = 5.5;
 
-  filters = [
-      new Filter(0, 'cool', 'american-football-outline'),
-      new Filter(1, 'sick', 'business-outline'),
-      new Filter(2, 'epic', 'earth-outline'),
-  ];
-
   categories = [
-      new FilterCategory(0, 'Sport', [this.filters[0], this.filters[1], this.filters[2]]),
-      new FilterCategory(1, 'Cultuur', [this.filters[1], this.filters[0], this.filters[2]]),
-      new FilterCategory(2, '112', [this.filters[0], this.filters[2], this.filters[1]]),
-      new FilterCategory(3, 'Politiek', [this.filters[2], this.filters[0], this.filters[1]]),
+      new FilterCategory(0, 'Sport', [
+        new Filter(0, 'cool', 'american-football-outline'),
+        new Filter(1, 'sick', 'business-outline'),
+        new Filter(2, 'epic', 'earth-outline'),
+      ]),
+      new FilterCategory(1, 'Cultuur', [
+        new Filter(0, 'sick', 'business-outline'),
+        new Filter(1, 'cool', 'american-football-outline'),
+        new Filter(2, 'epic', 'earth-outline'),
+      ]),
+      new FilterCategory(2, '112', [
+        new Filter(0, 'sick', 'business-outline'),
+        new Filter(1, 'epic', 'earth-outline'),
+        new Filter(2, 'cool', 'american-football-outline'),
+      ]),
+      new FilterCategory(3, 'Politiek', [
+        new Filter(0, 'epic', 'earth-outline'),
+        new Filter(1, 'cool', 'american-football-outline'),
+        new Filter(2, 'sick', 'business-outline'),
+      ]),
   ];
   selectedCategory = this.categories[0];
 
