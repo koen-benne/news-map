@@ -14,7 +14,7 @@
     <div id="filter-switches">
         <div class="filter-switch" *ngFor="let filter of this.selectedCategory.filters">
             <ion-icon [name]="filter.iconUrl"></ion-icon>
-            <ion-toggle checked="true"></ion-toggle>
+            <ion-toggle (ionChange)="toggleFilter(filter)" [checked]="filter.isChecked"></ion-toggle>
         </div>
     </div>
 
