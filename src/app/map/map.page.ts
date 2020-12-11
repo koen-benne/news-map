@@ -82,6 +82,11 @@ export class MapPage implements OnInit {
     }
   }
 
+  // Toggle filter
+  private toggleFilter(filter) {
+    filter.isChecked = !filter.isChecked;
+  }
+
   private loadMarkers() {
     // Load data to geojson
     const geojson = feed.news;
