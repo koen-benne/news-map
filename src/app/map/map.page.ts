@@ -130,10 +130,12 @@ class Filter {
   id: number;
   name: string;
   iconUrl: string;
+  isChecked: boolean;
 
-  constructor(id: number, name: string, iconUrl: string) {
+  constructor(id: number, name: string, iconUrl: string, isChecked = true) {
     this.id = id;
     this.name = name;
     this.iconUrl = iconUrl;
+    this.isChecked = isChecked;
   }
 }
