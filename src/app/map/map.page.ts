@@ -84,38 +84,38 @@ export class MapPage implements OnInit {
 
   private loadMarkers() {
     // Load data to geojson
-    let geojson = feed.news;
+    const geojson = feed.news;
 
     // Add markers
     geojson.features.forEach((addMarker) => {
       // Create a DIV for each feature
-      let el = document.createElement('div');
+      const el = document.createElement('div');
       el.id = 'marker';
       el.className = 'marker';
       el.style.width = '25px';
       el.style.height = '25px';
-      el.style.backgroundImage = ('url(../../assets/icon/categories/'+ addMarker.properties.categories[0] +'.svg)');
+      el.style.backgroundImage = ('url(../../assets/icon/categories/' + addMarker.properties.categories[0] + '.svg)');
       el.style.backgroundSize = 'cover';
       el.style.cursor = 'Pointer';
 
       // Add event that opens popup on click
       el.addEventListener('click', () => {
-        let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' +
+        const content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' +
             '<ion-card-content><ion-nav-link><a href=\"' + addMarker.properties.link + '\">Lees meer...</a></ion-nav-link></ion-card-content>';
 
-        let info = document.getElementById('info');
+        const info = document.getElementById('info');
         info.innerHTML = content;
 
         // Opens popup
-        let popup = document.getElementById('popup');
+        const popup = document.getElementById('popup');
         popup.style.display = 'block';
       });
 
       // Hide popup on map movement
       this.map.on('move', () => {
-        let popup = document.getElementById('popup');
+        const popup = document.getElementById('popup');
         popup.style.display = 'none';
-      })
+      });
 
       // Add marker for each feature and add to map
       new mapboxgl.Marker(el)
