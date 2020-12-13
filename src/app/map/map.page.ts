@@ -3,7 +3,6 @@ import { transition } from '../animations/news';
 import { Component, OnInit} from '@angular/core';
 import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
-import { decimalDigest } from '@angular/compiler/src/i18n/digest';
 import * as feed from '../../assets/news-feed.json';
 
 @Component({
@@ -22,26 +21,43 @@ export class MapPage implements OnInit {
   lat = 52;
   lng = 5.5;
 
+  geojson = feed.news;
+
+  filters = [
+    new Filter(0, 'cool', 'american-football-outline'),
+    new Filter(1, 'sick', 'business-outline'),
+    new Filter(2, 'epic', 'earth-outline'),
+    new Filter(3, 'sick', 'business-outline'),
+    new Filter(4, 'cool', 'american-football-outline'),
+    new Filter(5, 'epic', 'earth-outline'),
+    new Filter(6, 'sick', 'business-outline'),
+    new Filter(7, 'epic', 'earth-outline'),
+    new Filter(8, 'cool', 'american-football-outline'),
+    new Filter(9, 'epic', 'earth-outline'),
+    new Filter(10, 'cool', 'american-football-outline'),
+    new Filter(11, 'sick', 'business-outline'),
+  ];
+
   categories = [
       new FilterCategory(0, 'Sport', [
-        new Filter(0, 'cool', 'american-football-outline'),
-        new Filter(1, 'sick', 'business-outline'),
-        new Filter(2, 'epic', 'earth-outline'),
+        this.filters[0],
+        this.filters[1],
+        this.filters[2],
       ]),
       new FilterCategory(1, 'Cultuur', [
-        new Filter(0, 'sick', 'business-outline'),
-        new Filter(1, 'cool', 'american-football-outline'),
-        new Filter(2, 'epic', 'earth-outline'),
+        this.filters[3],
+        this.filters[4],
+        this.filters[5],
       ]),
       new FilterCategory(2, '112', [
-        new Filter(0, 'sick', 'business-outline'),
-        new Filter(1, 'epic', 'earth-outline'),
-        new Filter(2, 'cool', 'american-football-outline'),
+        this.filters[6],
+        this.filters[7],
+        this.filters[8],
       ]),
       new FilterCategory(3, 'Politiek', [
-        new Filter(0, 'epic', 'earth-outline'),
-        new Filter(1, 'cool', 'american-football-outline'),
-        new Filter(2, 'sick', 'business-outline'),
+        this.filters[9],
+        this.filters[10],
+        this.filters[11],
       ]),
   ];
   selectedCategory = this.categories[0];
@@ -85,14 +101,35 @@ export class MapPage implements OnInit {
   // Toggle filter
   private toggleFilter(filter) {
     filter.isChecked = !filter.isChecked;
+
+    // Remove and reload markers
+    const paras = document.getElementsByClassName('marker');
+    while (paras[0]) {
+      paras[0].parentNode.removeChild(paras[0]);
+    }
+
+    this.loadMarkers();
   }
 
+  // Loads markers
   private loadMarkers() {
-    // Load data to geojson
-    const geojson = feed.news;
+    // Filter geojson
+    const filteredFeatures = [];
+    // For each feature
+    for (const article of this.geojson.features) {
+      // For each category
+      for (const category of article.properties.categories) {
+        // Check if category is enabled, if one is enabled show article
+        if (this.filters.find(obj => obj.id === category).isChecked) {
+          filteredFeatures.push(article);
+          break;
+        }
+      }
+    }
+    console.log(filteredFeatures);
 
     // Add markers
-    geojson.features.forEach((addMarker) => {
+    filteredFeatures.forEach((addMarker) => {
       // Create a DIV for each feature
       const el = document.createElement('div');
       el.id = 'marker';
