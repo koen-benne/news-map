@@ -21,7 +21,8 @@
                     "link": "https://rtvu.nl/n/2116253/",
                     "address": "",
                     "categories": [
-                        "algemeen"
+                        1,
+                        9
                     ]
                 }
             },
@@ -44,7 +45,9 @@
                     "link": "https://rtvu.nl/n/2116254/",
                     "address": "",
                     "categories": [
-                        "wetgeving"
+                        1,
+                        2,
+                        10
                     ]
                 }
             },
@@ -67,7 +70,8 @@
                     "link": "https://rtvu.nl/n/2116139/",
                     "address": "",
                     "categories": [
-                        "algemeen"
+                        1,
+                        7
                     ]
                 }
             },
@@ -90,7 +94,8 @@
                     "link": "https://rtvu.nl/n/2116239/",
                     "address": "",
                     "categories": [
-                        "algemeen"
+                        3,
+                        11
                     ]
                 }
             },
@@ -113,11 +118,11 @@
                     "link": "https://rtvu.nl/n/2116247/",
                     "address": "",
                     "categories": [
-                        "algemeen"
+                        3,
+                        5
                     ]
                 }
             }
         ]
     }
 }  
-  
