@@ -89,7 +89,8 @@ export class MapPage implements OnInit {
 
       // Add event that opens popup on click
       el.addEventListener('click', () => {
-        let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' +
+        let content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title><img class=\"logo\" src=\"' + 
+            addMarker.properties.broadcaster + '\" alt=\"' + addMarker.properties.broadcaster + '\" style=\"max-height:50px; max-width:50px; position:absolute; right:0; top:0;\" ></ion-card-header>' +
             '<ion-card-content><ion-nav-link><a href=\"' + addMarker.properties.link + '\">Lees meer...</a></ion-nav-link></ion-card-content>';
 
         let info = document.getElementById('info');
