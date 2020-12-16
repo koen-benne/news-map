@@ -75,6 +75,7 @@ export class MapPage implements OnInit {
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
+    setTimeout(() => this.loadMarkers(), 0);
   }
 
   private buildMap() {
