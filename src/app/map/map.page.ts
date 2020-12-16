@@ -111,7 +111,7 @@ export class MapPage implements OnInit {
               [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.lat)]
             ]
             },
-          "circle-color": "blue",
+          "circle-color": "#7DB5FA",
           "circle-opacity": 0.3
       },
     });
