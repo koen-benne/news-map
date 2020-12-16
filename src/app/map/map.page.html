@@ -1,22 +1,31 @@
 <ion-content>
-  <div id="map"></div>
-  <div id="popup" class="popup">
-    <ion-card id="info" class="info"></ion-card>
-  </div>
+    <div id="map"></div>
+    <ion-card id="popup" #popup>
+        <ion-card-header>
+            <ion-card-title>{{ currentFeature.properties.title }}</ion-card-title>
+            <img class="logo" [src]="currentFeature.properties.broadcaster" [alt]="currentFeature.properties.broadcaster" style="max-height:50px; max-width:50px; position:absolute; right:0; top:0;">
+        </ion-card-header>
+        <ion-card-content>
+            <ion-nav-link>
+                <a [href]="currentFeature.properties.link">Lees meer...</a>
+            </ion-nav-link>
+        </ion-card-content>
+    </ion-card>
 
-  <div id="filter-menu">
-    <div id="filter-categories">
-        <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable"
-             [class.selected-category]="selectedCategory.id === category.id">
-          <p>{{ category.name }}</p>
-        </div>
-    </div>
-    <div id="filter-switches">
-        <div class="filter-switch" *ngFor="let filter of this.selectedCategory.filters">
-            <ion-icon [name]="filter.iconUrl"></ion-icon>
-            <ion-toggle checked="true"></ion-toggle>
-        </div>
-    </div>
 
-  </div>
+    <div id="filter-menu">
+        <div id="filter-categories">
+            <div *ngFor="let category of categories" (click)="selectCategory(category.id)" class="category ion-activatable"
+                 [class.selected-category]="selectedCategory.id === category.id">
+                <p>{{ category.name }}</p>
+            </div>
+        </div>
+        <div id="filter-switches">
+            <div class="filter-switch" *ngFor="let filter of this.selectedCategory.filters">
+                <ion-icon [name]="filter.iconUrl"></ion-icon>
+                <ion-toggle (ionChange)="toggleFilter(filter)" [checked]="filter.isChecked"></ion-toggle>
+            </div>
+        </div>
+
+    </div>
 </ion-content>
