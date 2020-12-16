@@ -24,6 +24,9 @@ export class MapPage implements OnInit {
   lat = 52;
   lng = 5.5;
 
+  radiusCenter = [5.5, 52];
+  radiusInKm = 5;
+  
   geojson = feed.news;
 
   filters = [
@@ -72,7 +75,6 @@ export class MapPage implements OnInit {
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
-    setTimeout(() => this.loadMarkers(), 0);
   }
 
   private buildMap() {
@@ -90,6 +92,12 @@ export class MapPage implements OnInit {
     // Set max scroll of map to fit the Netherlands
     this.map.setMaxBounds(this.map.getBounds());
     this.map.setZoom(6.5);
+
+    // Add radius and markers
+    this.map.on('load', () => {
+      this.showRadius();
+      this.loadMarkers();
+    });
   }
 
   private selectCategory(id: number) {
@@ -101,6 +109,45 @@ export class MapPage implements OnInit {
         }
       }
     }
+  }
+
+
+  private showRadius() {
+    this.map.addSource("source_radius", {
+      "type": "geojson",
+      "data": {
+          "type": "FeatureCollection",
+          "features": [{
+              "type": "Feature",
+              "geometry": {
+                  "type": "Point",
+                  "coordinates": this.radiusCenter,
+              }
+          }]
+      }
+    });
+
+    // calculate the radius from meters to pixels
+    const KmToPixelsAtMaxZoom = (km, lat) => (km * 1000) / 0.019 / Math.cos(lat * Math.PI / 180);
+  
+    // add layer for circle
+    this.map.addLayer({
+      "id": "radius",
+      "type": "circle",
+      "source": "source_radius",
+      "layout": {},
+      "paint": {
+          "circle-radius": {
+            'base': 2,
+            'stops': [
+              [0, 0],
+              [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.lat)]
+            ]
+            },
+          "circle-color": "#7DB5FA",
+          "circle-opacity": 0.3
+      },
+    });
   }
 
   // Toggle filter
