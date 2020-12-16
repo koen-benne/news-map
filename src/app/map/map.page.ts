@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import { transition } from '../animations/news';
-import { Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import * as feed from '../../assets/news-feed.json';
@@ -12,11 +12,14 @@ import * as feed from '../../assets/news-feed.json';
 })
 
 export class MapPage implements OnInit {
+  // Get popup element
+  @ViewChild('popup', {read: ElementRef}) popup: ElementRef<HTMLElement>;
+
   // Custom animation for transition
   animation = transition;
 
   map: mapboxgl.Map;
-  style = 'mapbox://styles/mapbox/streets-v11';
+  style = 'mapbox://styles/yerboycone/ckiq3d2hr4kxt17m3491dsory';
 
   lat = 52;
   lng = 5.5;
@@ -39,30 +42,32 @@ export class MapPage implements OnInit {
   ];
 
   categories = [
-      new FilterCategory(0, 'Sport', [
-        this.filters[0],
-        this.filters[1],
-        this.filters[2],
-      ]),
-      new FilterCategory(1, 'Cultuur', [
-        this.filters[3],
-        this.filters[4],
-        this.filters[5],
-      ]),
-      new FilterCategory(2, '112', [
-        this.filters[6],
-        this.filters[7],
-        this.filters[8],
-      ]),
-      new FilterCategory(3, 'Politiek', [
-        this.filters[9],
-        this.filters[10],
-        this.filters[11],
-      ]),
+    new FilterCategory(0, 'Sport', [
+      this.filters[0],
+      this.filters[1],
+      this.filters[2],
+    ]),
+    new FilterCategory(1, 'Cultuur', [
+      this.filters[3],
+      this.filters[4],
+      this.filters[5],
+    ]),
+    new FilterCategory(2, '112', [
+      this.filters[6],
+      this.filters[7],
+      this.filters[8],
+    ]),
+    new FilterCategory(3, 'Politiek', [
+      this.filters[9],
+      this.filters[10],
+      this.filters[11],
+    ]),
   ];
-  selectedCategory = this.categories[0];
 
-  constructor(private http: HttpClient) { }
+  selectedCategory = this.categories[0];
+  currentFeature = this.geojson.features[0];
+
+  constructor(private http: HttpClient, private renderer: Renderer2) { }
 
   ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
@@ -126,7 +131,6 @@ export class MapPage implements OnInit {
         }
       }
     }
-    console.log(filteredFeatures);
 
     // Add markers
     filteredFeatures.forEach((addMarker) => {
@@ -142,21 +146,22 @@ export class MapPage implements OnInit {
 
       // Add event that opens popup on click
       el.addEventListener('click', () => {
-        const content = '<ion-card-header><ion-card-title>' + addMarker.properties.title + '</ion-card-title></ion-card-header>' +
-            '<ion-card-content><ion-nav-link><a href=\"' + addMarker.properties.link + '\">Lees meer...</a></ion-nav-link></ion-card-content>';
+        if (this.currentFeature === addMarker && this.popup.nativeElement.style.display === 'block') {
+          this.renderer.setStyle(this.popup.nativeElement, 'display', 'none');
 
-        const info = document.getElementById('info');
-        info.innerHTML = content;
+        }
+        else {
+          this.currentFeature = addMarker;
 
-        // Opens popup
-        const popup = document.getElementById('popup');
-        popup.style.display = 'block';
+          // Opens popup
+          this.renderer.setStyle(this.popup.nativeElement, 'display', 'block');
+        }
       });
 
       // Hide popup on map movement
       this.map.on('move', () => {
-        const popup = document.getElementById('popup');
-        popup.style.display = 'none';
+        this.renderer.setStyle(this.popup.nativeElement, 'display', 'none');
+
       });
 
       // Add marker for each feature and add to map
