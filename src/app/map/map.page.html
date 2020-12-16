@@ -3,6 +3,7 @@
     <ion-card id="popup" #popup>
         <ion-card-header>
             <ion-card-title>{{ currentFeature.properties.title }}</ion-card-title>
+            <img class="logo" [src]="currentFeature.properties.broadcaster" [alt]="currentFeature.properties.broadcaster" style="max-height:50px; max-width:50px; position:absolute; right:0; top:0;">
         </ion-card-header>
         <ion-card-content>
             <ion-nav-link>
