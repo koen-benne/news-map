@@ -148,7 +148,6 @@ export class MapPage implements OnInit {
       el.addEventListener('click', () => {
         if (this.currentFeature === addMarker && this.popup.nativeElement.style.display === 'block') {
           this.renderer.setStyle(this.popup.nativeElement, 'display', 'none');
-
         }
         else {
           this.currentFeature = addMarker;
