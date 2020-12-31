@@ -4,6 +4,7 @@ import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core
 import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import * as feed from '../../assets/news-feed.json';
+import * as turf from '@turf/turf';
 
 @Component({
   selector: 'app-map',
@@ -25,8 +26,8 @@ export class MapPage implements OnInit {
   lng = 5.5;
 
   radiusCenter = [5.5, 52];
-  radiusInKm = 5;
-  
+  radiusInKm = 30;
+
   geojson = feed.news;
 
   filters = [
@@ -113,15 +114,15 @@ export class MapPage implements OnInit {
 
 
   private showRadius() {
-    this.map.addSource("source_radius", {
-      "type": "geojson",
-      "data": {
-          "type": "FeatureCollection",
-          "features": [{
-              "type": "Feature",
-              "geometry": {
-                  "type": "Point",
-                  "coordinates": this.radiusCenter,
+    this.map.addSource('source_radius', {
+      type: 'geojson',
+      data: {
+          type: 'FeatureCollection',
+          features: [{
+              type: 'Feature',
+              geometry: {
+                  type: 'Point',
+                  coordinates: this.radiusCenter,
               }
           }]
       }
@@ -129,23 +130,23 @@ export class MapPage implements OnInit {
 
     // calculate the radius from meters to pixels
     const KmToPixelsAtMaxZoom = (km, lat) => (km * 1000) / 0.019 / Math.cos(lat * Math.PI / 180);
-  
+
     // add layer for circle
     this.map.addLayer({
-      "id": "radius",
-      "type": "circle",
-      "source": "source_radius",
-      "layout": {},
-      "paint": {
-          "circle-radius": {
-            'base': 2,
-            'stops': [
+      id: 'radius',
+      type: 'circle',
+      source: 'source_radius',
+      layout: {},
+      paint: {
+          'circle-radius': {
+            base: 2,
+            stops: [
               [0, 0],
               [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.lat)]
             ]
             },
-          "circle-color": "#7DB5FA",
-          "circle-opacity": 0.3
+          'circle-color': '#7DB5FA',
+          'circle-opacity': 0.3
       },
     });
   }
@@ -169,12 +170,15 @@ export class MapPage implements OnInit {
     const filteredFeatures = [];
     // For each feature
     for (const article of this.geojson.features) {
-      // For each category
-      for (const category of article.properties.categories) {
-        // Check if category is enabled, if one is enabled show article
-        if (this.filters.find(obj => obj.id === category).isChecked) {
-          filteredFeatures.push(article);
-          break;
+      // Check if article is within radius
+      if (turf.distance(this.radiusCenter, article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm) {
+        // For each category
+        for (const category of article.properties.categories) {
+          // Check if category is enabled, if one is enabled show article
+          if (this.filters.find(obj => obj.id === category).isChecked) {
+            filteredFeatures.push(article);
+            break;
+          }
         }
       }
     }
