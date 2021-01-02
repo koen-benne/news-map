@@ -7,6 +7,8 @@ import * as feed from '../../assets/news-feed.json';
 import * as turf from '@turf/turf';
 import {StorageService} from '../storage.service';
 import {MapboxOutput, MapboxSearchService} from '../mapbox-search.service';
+import {SharedService} from '../shared.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -18,6 +20,9 @@ export class MapPage implements OnInit {
   // Get popup element
   @ViewChild('popup', {read: ElementRef}) popup: ElementRef<HTMLElement>;
 
+  // Subscribe to map update event
+  mapUpdateEventSubscription: Subscription;
+
   // Custom animation for transition
   animation = transition;
 
@@ -27,7 +32,7 @@ export class MapPage implements OnInit {
   // Current position
   currentPosition = {lng: 5.5, lat: 52};
 
-  radiusInKm = 30;
+  radiusInKm = 15;
 
   geojson = feed.news;
 
@@ -73,7 +78,13 @@ export class MapPage implements OnInit {
   currentFeature = this.geojson.features[0];
 
   constructor(private http: HttpClient, private renderer: Renderer2, private storageService: StorageService,
-              private mapboxSearchService: MapboxSearchService) { }
+              private mapboxSearchService: MapboxSearchService, private sharedService: SharedService)
+  {
+    this.mapUpdateEventSubscription = this.sharedService.getUpdateMap().subscribe(() => {
+      this.loadMarkers();
+      this.showRadius();
+    });
+  }
 
   async ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
@@ -133,8 +144,15 @@ export class MapPage implements OnInit {
   }
 
 
-  private showRadius() {
-    this.map.addSource('source_radius', {
+  async showRadius() {
+    this.radiusInKm = parseInt(await this.storageService.get('radius') || '15', 10);
+
+    if (this.map.getSource('source_radius')) {
+      this.map.removeLayer('radius');
+      this.map.removeSource('source_radius');
+    }
+
+    await this.map.addSource('source_radius', {
       type: 'geojson',
       data: {
           type: 'FeatureCollection',
@@ -171,21 +189,8 @@ export class MapPage implements OnInit {
     });
   }
 
-  // Toggle filter
-  private toggleFilter(filter) {
-    filter.isChecked = !filter.isChecked;
-
-    // Remove and reload markers
-    const paras = document.getElementsByClassName('marker');
-    while (paras[0]) {
-      paras[0].parentNode.removeChild(paras[0]);
-    }
-
-    this.loadMarkers();
-  }
-
   // Loads markers
-  private loadMarkers() {
+  public loadMarkers() {
     // Filter geojson
     const filteredFeatures = [];
     // For each feature
@@ -240,6 +245,19 @@ export class MapPage implements OnInit {
           .setLngLat(addMarker.geometry.coordinates)
           .addTo(this.map);
     });
+  }
+
+  // Toggle filter
+  private toggleFilter(filter) {
+    filter.isChecked = !filter.isChecked;
+
+    // Remove and reload markers
+    const paras = document.getElementsByClassName('marker');
+    while (paras[0]) {
+      paras[0].parentNode.removeChild(paras[0]);
+    }
+
+    this.loadMarkers();
   }
 }
 

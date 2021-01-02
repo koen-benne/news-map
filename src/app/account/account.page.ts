@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {transition} from '../animations/news';
 import {StorageService} from '../storage.service';
+import {SharedService} from '../shared.service';
 
 @Component({
   selector: 'app-account',
@@ -13,13 +14,32 @@ export class AccountPage implements OnInit {
 
   location = '';
 
-  constructor(public storageService: StorageService) { }
+  radius: number;
+
+  constructor(public storageService: StorageService, private sharedService: SharedService) { }
+
+  updateRange() {
+    if (this.radius) {
+      console.log('test');
+      this.storageService.set('radius', this.radius.toString());
+    }
+
+    this.sharedService.sendUpdateMap();
+  }
 
   async ngOnInit() {
     this.location = await this.storageService.get('location');
     if (!this.location) {
       this.storageService.set('location', 'Utrecht');
       this.location = await this.storageService.get('location');
+    }
+
+    const radius = await this.storageService.get('radius');
+    if (radius) {
+      this.radius = parseInt(radius, 10);
+    } else {
+      this.radius = 15;
+      this.storageService.set('radius', '15');
     }
   }
 

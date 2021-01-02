@@ -14,7 +14,7 @@
     <ion-item>
       <ion-label>Radius</ion-label>
       <ion-toggle></ion-toggle>
-      <ion-range min="5" max="200" value="15" pin="true" ></ion-range>
+      <ion-range [(ngModel)]="radius" min="5" max="200" pin="true" (ionChange)="updateRange()" ></ion-range>
     </ion-item>
   </ion-list>
 
