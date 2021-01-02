@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Account</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Locatie: {{ location }}</ion-label>
+      <ion-button [routerAnimation]="animation" [routerLink]="['/tabs/account/local-search']">Ander..</ion-button>
+    </ion-item>
+    <ion-item>
+      <ion-label>Radius</ion-label>
+      <ion-toggle></ion-toggle>
+      <ion-range min="5" max="200" value="15" pin="true" ></ion-range>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
