@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import * as feed from '../../assets/news-feed.json';
 import * as turf from '@turf/turf';
+import {StorageService} from '../storage.service';
+import {MapboxOutput, MapboxSearchService} from '../mapbox-search.service';
 
 @Component({
   selector: 'app-map',
@@ -22,10 +24,9 @@ export class MapPage implements OnInit {
   map: mapboxgl.Map;
   style = 'mapbox://styles/yerboycone/ckiq3d2hr4kxt17m3491dsory';
 
-  lat = 52;
-  lng = 5.5;
+  // Current position
+  currentPosition = {lng: 5.5, lat: 52};
 
-  radiusCenter = [5.5, 52];
   radiusInKm = 30;
 
   geojson = feed.news;
@@ -71,11 +72,30 @@ export class MapPage implements OnInit {
   selectedCategory = this.categories[0];
   currentFeature = this.geojson.features[0];
 
-  constructor(private http: HttpClient, private renderer: Renderer2) { }
+  constructor(private http: HttpClient, private renderer: Renderer2, private storageService: StorageService,
+              private mapboxSearchService: MapboxSearchService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
+
+    const address = await this.storageService.get('location');
+    this.setCoordinates(address);
+  }
+
+  // Sets currentPosition to the proper coordinates
+  setCoordinates(searchTerm) {
+    if (searchTerm && searchTerm.length > 0) {
+      this.mapboxSearchService
+          .search(searchTerm)
+          .subscribe((output: MapboxOutput) => {
+            const geometries = output.features.map(feat => feat.geometry);
+            if (geometries && geometries.length > 0) {
+              const coordinates = geometries[0].coordinates;
+              this.currentPosition = {lng: coordinates[0], lat: coordinates[1]};
+            }
+          });
+    }
   }
 
   private buildMap() {
@@ -83,7 +103,7 @@ export class MapPage implements OnInit {
       accessToken: environment.mapbox.accessToken,
       container: 'map',
       style: this.style,
-      center: [this.lng, this.lat],
+      center: [this.currentPosition.lng, this.currentPosition.lat],
       bounds: [[3, 50.2], [7.6, 53.8]],
     });
     // disable map rotation
@@ -122,7 +142,7 @@ export class MapPage implements OnInit {
               type: 'Feature',
               geometry: {
                   type: 'Point',
-                  coordinates: this.radiusCenter,
+                  coordinates: [this.currentPosition.lng, this.currentPosition.lat],
               }
           }]
       }
@@ -142,7 +162,7 @@ export class MapPage implements OnInit {
             base: 2,
             stops: [
               [0, 0],
-              [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.lat)]
+              [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.currentPosition.lat)]
             ]
             },
           'circle-color': '#7DB5FA',
@@ -171,7 +191,8 @@ export class MapPage implements OnInit {
     // For each feature
     for (const article of this.geojson.features) {
       // Check if article is within radius
-      if (turf.distance(this.radiusCenter, article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm) {
+      if (turf.distance([this.currentPosition.lng, this.currentPosition.lat],
+          article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm) {
         // For each category
         for (const category of article.properties.categories) {
           // Check if category is enabled, if one is enabled show article
