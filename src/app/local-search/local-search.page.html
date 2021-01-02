@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="tabs/account" [routerAnimation]="animation" icon="chevron-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Locatie</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-searchbar (ionInput)="search($event)" [value]="selectedAddress"></ion-searchbar>
+  <ion-list *ngIf="addresses.length > 0">
+    <ion-item button *ngFor="let address of addresses" (click)="onSelect(address)">
+      <ion-icon name="pin"></ion-icon>
+      {{ address }}
+    </ion-item>
+  </ion-list>
+</ion-content>
