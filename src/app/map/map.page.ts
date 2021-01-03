@@ -109,7 +109,10 @@ export class MapPage implements OnInit {
     }
   }
 
-  private buildMap() {
+  private async buildMap() {
+    const radiusFromStorage = await this.storageService.get('radius');
+    this.radiusInKm = parseInt(radiusFromStorage || '15', 10);
+
     this.map = new mapboxgl.Map({
       accessToken: environment.mapbox.accessToken,
       container: 'map',
@@ -143,9 +146,8 @@ export class MapPage implements OnInit {
     }
   }
 
-
+  // Create radius layer
   async showRadius() {
-    this.radiusInKm = parseInt(await this.storageService.get('radius') || '15', 10);
 
     if (this.map.getSource('source_radius')) {
       this.map.removeLayer('radius');
@@ -183,8 +185,8 @@ export class MapPage implements OnInit {
               [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.currentPosition.lat)]
             ]
             },
-          'circle-color': '#7DB5FA',
-          'circle-opacity': 0.3
+          'circle-color': '#7ab4ff',
+          'circle-opacity': 0.5
       },
     });
   }
