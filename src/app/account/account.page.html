@@ -11,9 +11,11 @@
       <ion-label>Locatie: {{ location }}</ion-label>
       <ion-button [routerAnimation]="animation" [routerLink]="['/tabs/account/local-search']">Ander..</ion-button>
     </ion-item>
-    <ion-item>
+    <ion-item lines="none">
       <ion-label>Radius</ion-label>
       <ion-toggle></ion-toggle>
+    </ion-item>
+    <ion-item>
       <ion-range [(ngModel)]="radius" min="5" max="200" pin="true" (ionChange)="updateRange()" ></ion-range>
     </ion-item>
   </ion-list>
