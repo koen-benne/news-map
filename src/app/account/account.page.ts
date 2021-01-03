@@ -15,12 +15,18 @@ export class AccountPage implements OnInit {
   location = '';
 
   radius: number;
+  radiusIsOn: boolean;
 
   constructor(public storageService: StorageService, private sharedService: SharedService) { }
 
+  updateRangeToggle() {
+    if (this.radiusIsOn) {
+      this.storageService.set('radiusIsOn', this.radiusIsOn.toString());
+    }
+  }
+
   updateRange() {
     if (this.radius) {
-      console.log('test');
       this.storageService.set('radius', this.radius.toString());
     }
 
@@ -41,6 +47,15 @@ export class AccountPage implements OnInit {
       this.radius = 15;
       this.storageService.set('radius', '15');
     }
+
+    const radiusIsOn = await this.storageService.get('radiusIsOn');
+    if (radiusIsOn) {
+      this.radiusIsOn = (radiusIsOn === 'true');
+    } else {
+      this.radiusIsOn = true;
+      this.storageService.set('radiusIsOn', 'true');
+    }
+
   }
 
 }

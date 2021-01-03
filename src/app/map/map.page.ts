@@ -33,6 +33,7 @@ export class MapPage implements OnInit {
   currentPosition = {lng: 5.5, lat: 52};
 
   radiusInKm = 15;
+  radiusIsOn = true;
 
   geojson = feed.news;
 
@@ -81,8 +82,7 @@ export class MapPage implements OnInit {
               private mapboxSearchService: MapboxSearchService, private sharedService: SharedService)
   {
     this.mapUpdateEventSubscription = this.sharedService.getUpdateMap().subscribe(() => {
-      this.loadMarkers();
-      this.showRadius();
+      this.loadMapResources();
     });
   }
 
@@ -109,10 +109,7 @@ export class MapPage implements OnInit {
     }
   }
 
-  private async buildMap() {
-    const radiusFromStorage = await this.storageService.get('radius');
-    this.radiusInKm = parseInt(radiusFromStorage || '15', 10);
-
+  private buildMap() {
     this.map = new mapboxgl.Map({
       accessToken: environment.mapbox.accessToken,
       container: 'map',
@@ -129,10 +126,22 @@ export class MapPage implements OnInit {
     this.map.setZoom(6.5);
 
     // Add radius and markers
-    this.map.on('load', () => {
-      this.showRadius();
-      this.loadMarkers();
+    this.map.on('load', async () => {
+      this.loadMapResources();
     });
+  }
+
+  private async loadMapResources() {
+    // Get radius from storage
+    const radiusFromStorage = await this.storageService.get('radius');
+    this.radiusInKm = parseInt(radiusFromStorage || '15', 10);
+
+    // Get radiusIsOn from storage
+    const radiusIsOnFromStorage = await this.storageService.get('radiusIsOn');
+    this.radiusIsOn = radiusIsOnFromStorage === 'true';
+
+    this.showRadius();
+    this.loadMarkers();
   }
 
   private selectCategory(id: number) {
@@ -148,7 +157,6 @@ export class MapPage implements OnInit {
 
   // Create radius layer
   async showRadius() {
-
     if (this.map.getSource('source_radius')) {
       this.map.removeLayer('radius');
       this.map.removeSource('source_radius');
@@ -191,15 +199,22 @@ export class MapPage implements OnInit {
     });
   }
 
-  // Loads markers
+  // Loads markers and deletes all existing ones
   public loadMarkers() {
+    // Remove existing markers if reload is needed
+    const paras = document.getElementsByClassName('marker');
+    while (paras[0]) {
+      paras[0].parentNode.removeChild(paras[0]);
+    }
+
     // Filter geojson
     const filteredFeatures = [];
     // For each feature
     for (const article of this.geojson.features) {
       // Check if article is within radius
-      if (turf.distance([this.currentPosition.lng, this.currentPosition.lat],
-          article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm) {
+      if (
+          (turf.distance([this.currentPosition.lng, this.currentPosition.lat],
+          article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm)) {
         // For each category
         for (const category of article.properties.categories) {
           // Check if category is enabled, if one is enabled show article
@@ -215,7 +230,6 @@ export class MapPage implements OnInit {
     filteredFeatures.forEach((addMarker) => {
       // Create a DIV for each feature
       const el = document.createElement('div');
-      el.id = 'marker';
       el.className = 'marker';
       el.style.width = '25px';
       el.style.height = '25px';
@@ -252,12 +266,6 @@ export class MapPage implements OnInit {
   // Toggle filter
   private toggleFilter(filter) {
     filter.isChecked = !filter.isChecked;
-
-    // Remove and reload markers
-    const paras = document.getElementsByClassName('marker');
-    while (paras[0]) {
-      paras[0].parentNode.removeChild(paras[0]);
-    }
 
     this.loadMarkers();
   }

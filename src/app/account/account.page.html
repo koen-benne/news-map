@@ -13,7 +13,7 @@
     </ion-item>
     <ion-item lines="none">
       <ion-label>Radius</ion-label>
-      <ion-toggle></ion-toggle>
+      <ion-toggle [(ngModel)]="radiusIsOn" (ionChange)="updateRangeToggle()"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-range [(ngModel)]="radius" min="5" max="200" pin="true" (ionChange)="updateRange()" ></ion-range>
