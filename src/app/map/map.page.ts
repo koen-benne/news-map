@@ -197,6 +197,18 @@ export class MapPage implements OnInit {
           'circle-opacity': 0.5
       },
     });
+
+    // add marker at center
+    const locationMarker = document.createElement('div');
+    locationMarker.className = 'marker';
+    locationMarker.style.width = '25px';
+    locationMarker.style.height = '25px';
+    locationMarker.style.backgroundImage = ('url(../../assets/icon/location-sharp.svg)');
+    locationMarker.style.backgroundSize = 'cover';
+
+    const locationMarkerAdd = new mapboxgl.Marker(locationMarker)
+        .setLngLat(this.currentPosition)
+        .addTo(this.map);
   }
 
   // Loads markers and deletes all existing ones
