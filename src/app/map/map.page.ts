@@ -5,6 +5,10 @@ import { environment } from '../../environments/environment';
 import * as mapboxgl from 'mapbox-gl';
 import * as feed from '../../assets/news-feed.json';
 import * as turf from '@turf/turf';
+import {StorageService} from '../storage.service';
+import {MapboxOutput, MapboxSearchService} from '../mapbox-search.service';
+import {SharedService} from '../shared.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -16,17 +20,20 @@ export class MapPage implements OnInit {
   // Get popup element
   @ViewChild('popup', {read: ElementRef}) popup: ElementRef<HTMLElement>;
 
+  // Subscribe to map update event
+  mapUpdateEventSubscription: Subscription;
+
   // Custom animation for transition
   animation = transition;
 
   map: mapboxgl.Map;
   style = 'mapbox://styles/yerboycone/ckiq3d2hr4kxt17m3491dsory';
 
-  lat = 52;
-  lng = 5.5;
+  // Current position
+  currentPosition = {lng: 5.5, lat: 52};
 
-  radiusCenter = [5.5, 52];
-  radiusInKm = 30;
+  radiusInKm = 15;
+  radiusIsOn = true;
 
   geojson = feed.news;
 
@@ -71,11 +78,35 @@ export class MapPage implements OnInit {
   selectedCategory = this.categories[0];
   currentFeature = this.geojson.features[0];
 
-  constructor(private http: HttpClient, private renderer: Renderer2) { }
+  constructor(private http: HttpClient, private renderer: Renderer2, private storageService: StorageService,
+              private mapboxSearchService: MapboxSearchService, private sharedService: SharedService)
+  {
+    this.mapUpdateEventSubscription = this.sharedService.getUpdateMap().subscribe(() => {
+      this.loadMapResources();
+    });
+  }
 
-  ngOnInit() {
+  async ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
+
+    const address = await this.storageService.get('location');
+    this.setCoordinates(address);
+  }
+
+  // Sets currentPosition to the proper coordinates
+  setCoordinates(searchTerm) {
+    if (searchTerm && searchTerm.length > 0) {
+      this.mapboxSearchService
+          .search(searchTerm)
+          .subscribe((output: MapboxOutput) => {
+            const geometries = output.features.map(feat => feat.geometry);
+            if (geometries && geometries.length > 0) {
+              const coordinates = geometries[0].coordinates;
+              this.currentPosition = {lng: coordinates[0], lat: coordinates[1]};
+            }
+          });
+    }
   }
 
   private buildMap() {
@@ -83,7 +114,7 @@ export class MapPage implements OnInit {
       accessToken: environment.mapbox.accessToken,
       container: 'map',
       style: this.style,
-      center: [this.lng, this.lat],
+      center: [this.currentPosition.lng, this.currentPosition.lat],
       bounds: [[3, 50.2], [7.6, 53.8]],
     });
     // disable map rotation
@@ -95,10 +126,22 @@ export class MapPage implements OnInit {
     this.map.setZoom(6.5);
 
     // Add radius and markers
-    this.map.on('load', () => {
-      this.showRadius();
-      this.loadMarkers();
+    this.map.on('load', async () => {
+      this.loadMapResources();
     });
+  }
+
+  private async loadMapResources() {
+    // Get radius from storage
+    const radiusFromStorage = await this.storageService.get('radius');
+    this.radiusInKm = parseInt(radiusFromStorage || '15', 10);
+
+    // Get radiusIsOn from storage
+    const radiusIsOnFromStorage = await this.storageService.get('radiusIsOn');
+    this.radiusIsOn = radiusIsOnFromStorage === 'true';
+
+    this.showRadius();
+    this.loadMarkers();
   }
 
   private selectCategory(id: number) {
@@ -112,9 +155,14 @@ export class MapPage implements OnInit {
     }
   }
 
+  // Create radius layer
+  async showRadius() {
+    if (this.map.getSource('source_radius')) {
+      this.map.removeLayer('radius');
+      this.map.removeSource('source_radius');
+    }
 
-  private showRadius() {
-    this.map.addSource('source_radius', {
+    await this.map.addSource('source_radius', {
       type: 'geojson',
       data: {
           type: 'FeatureCollection',
@@ -122,7 +170,7 @@ export class MapPage implements OnInit {
               type: 'Feature',
               geometry: {
                   type: 'Point',
-                  coordinates: this.radiusCenter,
+                  coordinates: [this.currentPosition.lng, this.currentPosition.lat],
               }
           }]
       }
@@ -142,36 +190,31 @@ export class MapPage implements OnInit {
             base: 2,
             stops: [
               [0, 0],
-              [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.lat)]
+              [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.currentPosition.lat)]
             ]
             },
-          'circle-color': '#7DB5FA',
-          'circle-opacity': 0.3
+          'circle-color': '#7ab4ff',
+          'circle-opacity': 0.5
       },
     });
   }
 
-  // Toggle filter
-  private toggleFilter(filter) {
-    filter.isChecked = !filter.isChecked;
-
-    // Remove and reload markers
+  // Loads markers and deletes all existing ones
+  public loadMarkers() {
+    // Remove existing markers if reload is needed
     const paras = document.getElementsByClassName('marker');
     while (paras[0]) {
       paras[0].parentNode.removeChild(paras[0]);
     }
 
-    this.loadMarkers();
-  }
-
-  // Loads markers
-  private loadMarkers() {
     // Filter geojson
     const filteredFeatures = [];
     // For each feature
     for (const article of this.geojson.features) {
       // Check if article is within radius
-      if (turf.distance(this.radiusCenter, article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm) {
+      if (
+          (turf.distance([this.currentPosition.lng, this.currentPosition.lat],
+          article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm)) {
         // For each category
         for (const category of article.properties.categories) {
           // Check if category is enabled, if one is enabled show article
@@ -187,7 +230,6 @@ export class MapPage implements OnInit {
     filteredFeatures.forEach((addMarker) => {
       // Create a DIV for each feature
       const el = document.createElement('div');
-      el.id = 'marker';
       el.className = 'marker';
       el.style.width = '25px';
       el.style.height = '25px';
@@ -219,6 +261,13 @@ export class MapPage implements OnInit {
           .setLngLat(addMarker.geometry.coordinates)
           .addTo(this.map);
     });
+  }
+
+  // Toggle filter
+  private toggleFilter(filter) {
+    filter.isChecked = !filter.isChecked;
+
+    this.loadMarkers();
   }
 }
 
