@@ -197,8 +197,10 @@ export class MapPage implements OnInit {
           'circle-opacity': 0.5
       },
     });
+  }
 
-    // add marker at center
+  // add marker at center
+  public loadLocationMarker() {
     const locationMarker = document.createElement('div');
     locationMarker.className = 'marker';
     locationMarker.style.width = '25px';
@@ -237,6 +239,8 @@ export class MapPage implements OnInit {
         }
       }
     }
+
+    this.loadLocationMarker();
 
     // Add markers
     filteredFeatures.forEach((addMarker) => {
