@@ -38,17 +38,17 @@ export class MapPage implements OnInit {
   geojson = feed.news;
 
   filters = [
-    new Filter(0, 'cool', 'american-football-outline'),
-    new Filter(1, 'sick', 'business-outline'),
-    new Filter(2, 'epic', 'earth-outline'),
-    new Filter(3, 'sick', 'business-outline'),
-    new Filter(4, 'cool', 'american-football-outline'),
-    new Filter(5, 'epic', 'earth-outline'),
-    new Filter(6, 'sick', 'business-outline'),
-    new Filter(7, 'epic', 'earth-outline'),
-    new Filter(8, 'cool', 'american-football-outline'),
+    new Filter(0, 'cool', 'football-outline'),
+    new Filter(1, 'sick', 'tennisball-outline'),
+    new Filter(2, 'epic', 'basketball-outline'),
+    new Filter(3, 'sick', 'flame-outline'),
+    new Filter(4, 'cool', 'medkit-outline'),
+    new Filter(5, 'epic', 'shield-outline'),
+    new Filter(6, 'sick', 'storefront-outline'),
+    new Filter(7, 'epic', 'trail-sign-outline'),
+    new Filter(8, 'cool', 'dice-outline'),
     new Filter(9, 'epic', 'earth-outline'),
-    new Filter(10, 'cool', 'american-football-outline'),
+    new Filter(10, 'cool', 'bar-chart-outline'),
     new Filter(11, 'sick', 'business-outline'),
   ];
 
@@ -58,12 +58,12 @@ export class MapPage implements OnInit {
       this.filters[1],
       this.filters[2],
     ]),
-    new FilterCategory(1, 'Cultuur', [
+    new FilterCategory(1, '112', [
       this.filters[3],
       this.filters[4],
       this.filters[5],
     ]),
-    new FilterCategory(2, '112', [
+    new FilterCategory(2, 'Cultuur', [
       this.filters[6],
       this.filters[7],
       this.filters[8],
