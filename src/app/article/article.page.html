@@ -1,15 +1,15 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="tabs" [routerAnimation]="animation" icon="chevron-back-outline"></ion-back-button>
+      <ion-back-button defaultHref="tabs/news" [routerAnimation]="animation" icon="chevron-back-outline"></ion-back-button>
     </ion-buttons>
     <ion-title>Artikel</ion-title>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <article id="article">
-    <h2>{{ article.title }}</h2>
-    <ion-img [src]="article.urlToImage"></ion-img>
-    <p>{{ article.content }}</p>
+<ion-content style="padding: 10px;">
+  <article *ngFor="let article of articles" id="article">
+    <h2>{{ article.properties.title }}</h2>
+    <p>{{ article.properties.description }}</p>
+    <p>{{ article.properties.content }}</p>
   </article>
 </ion-content>
