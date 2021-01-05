@@ -1,0 +1,50 @@
+<ion-header (click)="logout()">
+  <ion-toolbar>
+      <ion-title align="right">Uitloggen</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding" align="center">
+    <ion-text color="secondary">
+        <h1>Account</h1>
+    </ion-text>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <h3>Welkom {{userEmail}}!</h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Email: {{userEmail}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Password : Edit{{userPassword}}
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Locatie : Edit{{location}}
+          <ion-searchbar></ion-searchbar>
+      </ion-col>
+      <ion-item>
+        <ion-menu-toggle></ion-menu-toggle>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        Radius : 20km
+          <ion-list>
+              <ion-item>
+                  <ion-range min="1000" max="2000" step="100" snaps="true" color="secondary"></ion-range>
+              </ion-item>
+          </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>
