@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {AuthenticateService} from '../services/authentication.service';
+import {AuthenticateService} from '../authentication.service';
 import {NavController} from '@ionic/angular';
 
 @Component({
@@ -11,10 +11,12 @@ import {NavController} from '@ionic/angular';
 export class RegisterPage implements OnInit {
 
 
+  // tslint:disable-next-line:variable-name
   validations_form: FormGroup;
-  errorMessage: string = '';
-  successMessage: string = '';
+  errorMessage = '';
+  successMessage = '';
 
+  // tslint:disable-next-line:variable-name
   validation_messages = {
     email: [
       { type: 'required', message: 'Email is required.' },
@@ -42,6 +44,10 @@ export class RegisterPage implements OnInit {
         Validators.minLength(5),
         Validators.required
       ])),
+      passwordRepeat: new FormControl('', Validators.compose([
+        Validators.minLength(5),
+        Validators.required
+      ])),
     });
   }
 
@@ -55,11 +61,11 @@ export class RegisterPage implements OnInit {
           console.log(err);
           this.errorMessage = err.message;
           this.successMessage = '';
-        })
+        });
   }
 
   goLoginPage() {
-    this.navCtrl.navigateBack('');
+    this.navCtrl.navigateForward('/login');
   }
 
 
