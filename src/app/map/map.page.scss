@@ -86,6 +86,6 @@ ion-content {
 #popup {
   position: absolute;
   top: 0;
-  height: 20%;
+  max-height: 20%;
   display: none;
   }
