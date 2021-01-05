@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('../map/map.module').then(m => m.MapPageModule)
       },
       {
+        path: 'account',
+        loadChildren: () => import('../account/account.module').then(m => m.AccountPageModule)
+      },
+      {
         path: '',
         redirectTo: '/tabs/map',
         pathMatch: 'full'

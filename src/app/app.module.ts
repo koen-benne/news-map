@@ -9,6 +9,8 @@ import {StatusBar} from '@ionic-native/status-bar/ngx';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HttpClientModule} from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 import {AngularFireModule} from '@angular/fire';
 import {AngularFireAuthModule} from '@angular/fire/auth';
@@ -21,7 +23,8 @@ import {environment} from '../environments/environment';
       BrowserModule, IonicModule.forRoot({
 
   }), AppRoutingModule, HttpClientModule, AngularFireAuthModule,
-    AngularFireModule.initializeApp(environment.firebase)],
+    AngularFireModule.initializeApp(environment.firebase),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })],
   providers: [
     StatusBar,
     SplashScreen,
