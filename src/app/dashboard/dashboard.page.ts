@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {NavController} from '@ionic/angular';
-import {AuthenticateService} from '../services/authentication.service';
+import {AuthenticateService} from '../authentication.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,12 +20,11 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
 
     this.authService.userDetails().subscribe(res => {
-      console.log('res', res);
-      if (res !== null) {
+      if (res) {
         this.userEmail = res.email;
         this.userName = res.displayName;
       } else {
-        this.navCtrl.navigateBack('');
+        this.navCtrl.navigateForward('register');
       }
     }, err => {
       console.log('err', err);
@@ -36,7 +35,6 @@ export class DashboardPage implements OnInit {
   logout() {
     this.authService.logoutUser()
         .then(res => {
-          console.log(res);
           this.navCtrl.navigateBack('');
         })
         .catch(error => {

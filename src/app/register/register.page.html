@@ -1,7 +1,10 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registreren</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding" align="center">
-    <ion-text color="secondary">
-        <h1>Registreren</h1>
-    </ion-text>
   <form class="form" [formGroup]="validations_form" (ngSubmit)="tryRegister(validations_form.value)">
     <ion-item>
       <ion-label position="floating" color="primary">Email</ion-label>
@@ -10,7 +13,7 @@
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.email">
         <div class="error-message"
-             *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+             *ngIf="validations_form.get('email') && validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
           {{ validation.message }}
         </div>
       </ng-container>
@@ -23,7 +26,7 @@
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.password">
         <div class="error-message"
-             *ngIf="validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
+             *ngIf="validations_form.get('password') && validations_form.get('password').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
           {{ validation.message }}
         </div>
       </ng-container>
@@ -31,12 +34,12 @@
 
     <ion-item>
       <ion-label position="floating" color="primary">Wachtwoord herhalen</ion-label>
-      <ion-input type="password" formControlName="password-repeat" class="form-controll" required></ion-input>
+      <ion-input type="password" formControlName="passwordRepeat" class="form-controll" required></ion-input>
     </ion-item>
     <div class="validation-errors">
       <ng-container *ngFor="let validation of validation_messages.password">
         <div class="error-message"
-             *ngIf="validations_form.get('password-repeat').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
+             *ngIf="validations_form.get('passwordRepeat') && validations_form.get('passwordRepeat').hasError(validation.type) && (validations_form.get('password').dirty || validations_form.get('password').touched)">
           {{ validation.message }}
         </div>
       </ng-container>

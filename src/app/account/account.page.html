@@ -4,9 +4,12 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [hidden]="loggedInIsHidden" class="ion-padding" align="center">
 
   <ion-list>
+    <ion-item>
+      Email: {{userEmail}}
+    </ion-item>
     <ion-item>
       <ion-label>Locatie: {{ location }}</ion-label>
       <ion-button [routerAnimation]="animation" [routerLink]="['/tabs/account/local-search']">Ander..</ion-button>
@@ -18,6 +21,13 @@
     <ion-item>
       <ion-range [(ngModel)]="radius" min="5" max="200" pin="true" (ionChange)="updateRange()" ></ion-range>
     </ion-item>
+    <ion-item>
+      <ion-button (click)="logout()">Logout</ion-button>
+    </ion-item>
   </ion-list>
 
+</ion-content>
+
+<ion-content [hidden]="notLoggedInIsHidden">
+  <p style="padding: 5px 15px">Please <a (click)="this.navCtrl.navigateForward('/login')">log in</a> or <a (click)="this.navCtrl.navigateForward('/register')">sign up</a> to use the location and radius features</p>
 </ion-content>
