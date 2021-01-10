@@ -30,7 +30,7 @@ export class MapPage implements OnInit {
   style = 'mapbox://styles/yerboycone/ckiq3d2hr4kxt17m3491dsory';
 
   // Current position
-  currentPosition = {lng: 5.5, lat: 52};
+  currentPosition = null;
 
   radiusInKm = 15;
   radiusIsOn = true;
@@ -78,8 +78,11 @@ export class MapPage implements OnInit {
   selectedCategory = this.categories[0];
   currentFeature = this.geojson.features[0];
 
-  constructor(private http: HttpClient, private renderer: Renderer2, private storageService: StorageService,
-              private mapboxSearchService: MapboxSearchService, private sharedService: SharedService)
+  constructor(private http: HttpClient,
+              private renderer: Renderer2,
+              private storageService: StorageService,
+              private mapboxSearchService: MapboxSearchService,
+              private sharedService: SharedService)
   {
     this.mapUpdateEventSubscription = this.sharedService.getUpdateMap().subscribe(() => {
       this.loadMapResources();
@@ -89,23 +92,28 @@ export class MapPage implements OnInit {
   async ngOnInit() {
     // For some reason the map takes the correct size when its put in the event loop like this...
     setTimeout(() => this.buildMap(), 0);
-
-    const address = await this.storageService.get('location');
-    this.setCoordinates(address);
   }
 
   // Sets currentPosition to the proper coordinates
   setCoordinates(searchTerm) {
+
     if (searchTerm && searchTerm.length > 0) {
-      this.mapboxSearchService
-          .search(searchTerm)
-          .subscribe((output: MapboxOutput) => {
-            const geometries = output.features.map(feat => feat.geometry);
-            if (geometries && geometries.length > 0) {
-              const coordinates = geometries[0].coordinates;
-              this.currentPosition = {lng: coordinates[0], lat: coordinates[1]};
-            }
-          });
+      return new Promise((resolve) => {
+        this.mapboxSearchService
+            .search(searchTerm)
+            .subscribe((output: MapboxOutput) => {
+              const geometries = output.features.map(feat => feat.geometry);
+              if (geometries && geometries.length > 0) {
+                const coordinates = geometries[0].coordinates;
+                this.currentPosition = {lng: coordinates[0], lat: coordinates[1]};
+              } else {
+                this.radiusIsOn = false;
+              }
+              resolve();
+            });
+      });
+    } else {
+      this.radiusIsOn = false;
     }
   }
 
@@ -114,7 +122,6 @@ export class MapPage implements OnInit {
       accessToken: environment.mapbox.accessToken,
       container: 'map',
       style: this.style,
-      center: [this.currentPosition.lng, this.currentPosition.lat],
       bounds: [[3, 50.2], [7.6, 53.8]],
     });
     // disable map rotation
@@ -132,6 +139,10 @@ export class MapPage implements OnInit {
   }
 
   private async loadMapResources() {
+    // Set location
+    const address = await this.storageService.get('location');
+    await this.setCoordinates(address);
+
     // Get radius from storage
     const radiusFromStorage = await this.storageService.get('radius');
     this.radiusInKm = parseInt(radiusFromStorage || '15', 10);
@@ -140,7 +151,9 @@ export class MapPage implements OnInit {
     const radiusIsOnFromStorage = await this.storageService.get('radiusIsOn');
     this.radiusIsOn = radiusIsOnFromStorage === 'true';
 
-    this.showRadius();
+    if (this.radiusIsOn) {
+      this.showRadius();
+    }
     this.loadMarkers();
   }
 
@@ -226,7 +239,7 @@ export class MapPage implements OnInit {
     // For each feature
     for (const article of this.geojson.features) {
       // Check if article is within radius
-      if (
+      if (!this.radiusIsOn ||
           (turf.distance([this.currentPosition.lng, this.currentPosition.lat],
           article.geometry.coordinates, {units: 'kilometers'}) <= this.radiusInKm)) {
         // For each category

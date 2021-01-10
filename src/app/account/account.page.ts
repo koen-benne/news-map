@@ -4,6 +4,7 @@ import {StorageService} from '../storage.service';
 import {SharedService} from '../shared.service';
 import {NavController} from '@ionic/angular';
 import {AuthenticateService} from '../authentication.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-account',
@@ -11,6 +12,10 @@ import {AuthenticateService} from '../authentication.service';
   styleUrls: ['./account.page.scss'],
 })
 export class AccountPage implements OnInit {
+
+  // Subscribe to location update event
+  locationUpdateEventSubscription: Subscription;
+
   animation = transition;
 
   location = '';
@@ -25,7 +30,12 @@ export class AccountPage implements OnInit {
   notLoggedInIsHidden = true;
 
   constructor(public storageService: StorageService, private sharedService: SharedService,
-              public navCtrl: NavController, private authService: AuthenticateService) { }
+              public navCtrl: NavController, private authService: AuthenticateService)
+  {
+    this.locationUpdateEventSubscription = this.sharedService.getUpdateMap().subscribe(async () => {
+      this.location = await this.storageService.get('location');
+    });
+  }
 
   updateRangeToggle() {
     if (this.radiusIsOn) {
