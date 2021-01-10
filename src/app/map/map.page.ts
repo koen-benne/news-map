@@ -95,7 +95,7 @@ export class MapPage implements OnInit {
   }
 
   // Sets currentPosition to the proper coordinates
-  setCoordinates(searchTerm) {
+  private setCoordinates(searchTerm) {
 
     if (searchTerm && searchTerm.length > 0) {
       return new Promise((resolve) => {
@@ -151,9 +151,7 @@ export class MapPage implements OnInit {
     const radiusIsOnFromStorage = await this.storageService.get('radiusIsOn');
     this.radiusIsOn = radiusIsOnFromStorage === 'true';
 
-    if (this.radiusIsOn) {
-      this.showRadius();
-    }
+    this.showRadius();
     this.loadMarkers();
   }
 
@@ -170,46 +168,50 @@ export class MapPage implements OnInit {
 
   // Create radius layer
   async showRadius() {
+    // Remove previous layer if it exists
     if (this.map.getSource('source_radius')) {
       this.map.removeLayer('radius');
       this.map.removeSource('source_radius');
     }
 
-    await this.map.addSource('source_radius', {
-      type: 'geojson',
-      data: {
+    // Only create radius if the radius is on
+    if (this.radiusIsOn) {
+      await this.map.addSource('source_radius', {
+        type: 'geojson',
+        data: {
           type: 'FeatureCollection',
           features: [{
-              type: 'Feature',
-              geometry: {
-                  type: 'Point',
-                  coordinates: [this.currentPosition.lng, this.currentPosition.lat],
-              }
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [this.currentPosition.lng, this.currentPosition.lat],
+            }
           }]
-      }
-    });
+        }
+      });
 
-    // calculate the radius from meters to pixels
-    const KmToPixelsAtMaxZoom = (km, lat) => (km * 1000) / 0.019 / Math.cos(lat * Math.PI / 180);
+      // calculate the radius from meters to pixels
+      const KmToPixelsAtMaxZoom = (km, lat) => (km * 1000) / 0.019 / Math.cos(lat * Math.PI / 180);
 
-    // add layer for circle
-    this.map.addLayer({
-      id: 'radius',
-      type: 'circle',
-      source: 'source_radius',
-      layout: {},
-      paint: {
+      // add layer for circle
+      this.map.addLayer({
+        id: 'radius',
+        type: 'circle',
+        source: 'source_radius',
+        layout: {},
+        paint: {
           'circle-radius': {
             base: 2,
             stops: [
               [0, 0],
               [22, KmToPixelsAtMaxZoom(this.radiusInKm, this.currentPosition.lat)]
             ]
-            },
+          },
           'circle-color': '#7ab4ff',
           'circle-opacity': 0.5
-      },
-    });
+        },
+      });
+    }
   }
 
   // add marker at center

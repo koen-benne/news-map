@@ -22,12 +22,12 @@
       <ion-range [(ngModel)]="radius" min="5" max="200" pin="true" (ionChange)="updateRange()" ></ion-range>
     </ion-item>
     <ion-item>
-      <ion-button (click)="logout()">Logout</ion-button>
+      <ion-button (click)="logout()">Uitloggen</ion-button>
     </ion-item>
   </ion-list>
 
 </ion-content>
 
 <ion-content [hidden]="notLoggedInIsHidden">
-  <p style="padding: 5px 15px">Please <a (click)="this.navCtrl.navigateForward('/login')">log in</a> or <a (click)="this.navCtrl.navigateForward('/register')">sign up</a> to use the location and radius features</p>
+  <p style="padding: 5px 15px"><a (click)="this.navCtrl.navigateForward('/login')">Log in</a> of <a (click)="this.navCtrl.navigateForward('/register')">registreer</a> om de radius en locatie voorzieningen te gebruiken</p>
 </ion-content>

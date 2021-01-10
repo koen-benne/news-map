@@ -37,10 +37,10 @@ export class AccountPage implements OnInit {
     });
   }
 
-  updateRangeToggle() {
-    if (this.radiusIsOn) {
-      this.storageService.set('radiusIsOn', this.radiusIsOn.toString());
-    }
+  async updateRangeToggle() {
+    await this.storageService.set('radiusIsOn', this.radiusIsOn.toString());
+
+    this.sharedService.sendUpdateMap();
   }
 
   updateRange() {
@@ -81,6 +81,7 @@ export class AccountPage implements OnInit {
 
     const radiusIsOn = await this.storageService.get('radiusIsOn');
     if (radiusIsOn) {
+      console.log(radiusIsOn);
       this.radiusIsOn = (radiusIsOn === 'true');
     } else {
       this.radiusIsOn = true;
