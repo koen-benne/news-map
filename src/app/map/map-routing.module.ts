@@ -5,16 +5,7 @@ import { MapPage } from './map.page';
 const routes: Routes = [
   {
     path: '',
-    children: [
-      {
-        path: '',
-        component: MapPage,
-      },
-      {
-        path: 'article',
-        loadChildren: () => import('../article/article.module').then(m => m.ArticlePageModule)
-      },
-    ]
+    component: MapPage,
   }
 ];
 

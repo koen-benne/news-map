@@ -1,16 +1,12 @@
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Trending</ion-title>
-    </ion-toolbar>
-</ion-header>
 <ion-content>
+    <h2>Trending</h2>
     <ion-card *ngFor="let article of articles">
         <ion-card-header>
             <ion-card-title style="max-height:30%; font-size:larger;">{{ article.properties.title }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
             <ion-nav-link>
-                <ion-button routerDirection="forward" [routerAnimation]="animation" [routerLink]="['/tabs/news/article']" [queryParams]="{id: article.properties.id}">Lees meer</ion-button>
+                <ion-button routerDirection="forward" [routerAnimation]="animation" [routerLink]="['/article']" [queryParams]="{id: article.properties.id}">Lees meer</ion-button>
             </ion-nav-link>
             <img class="logo" [src]="article.properties.broadcaster" [alt]="article.properties.broadcaster" style="max-height:30px; max-width:80px; position:absolute; right:0; bottom:0;">
         </ion-card-content>
