@@ -8,13 +8,22 @@ export class SharedService {
 
   constructor() { }
 
-  private subject = new Subject<any>();
+  private map = new Subject<any>();
+  private location = new Subject<any>();
 
   sendUpdateMap() {
-    this.subject.next();
+    this.map.next();
+  }
+
+  sendUpdateLocation() {
+    this.location.next();
   }
 
   getUpdateMap(): Observable<any>{
-    return this.subject.asObservable();
+    return this.map.asObservable();
+  }
+
+  getUpdateLocation(): Observable<any> {
+    return this.location.asObservable();
   }
 }

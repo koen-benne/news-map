@@ -46,9 +46,10 @@
     </div>
 
 
-    <ion-button class="submit-btn" type="submit" [disabled]="!validations_form.valid">Register</ion-button>
     <label class="error-message">{{errorMessage}}</label>
     <label class="success-message">{{successMessage}}</label>
+    <br>
+    <ion-button class="submit-btn" type="submit" [disabled]="!validations_form.valid">Registreren</ion-button>
   </form>
   <p class="go-to-login">Al een account? <a (click)="goLoginPage()">Ga naar log in.</a></p>
 </ion-content>

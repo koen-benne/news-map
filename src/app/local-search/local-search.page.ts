@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {transition} from '../animations/news';
 import {Feature, MapboxOutput, MapboxSearchService} from '../mapbox-search.service';
 import {StorageService} from '../storage.service';
+import {NavController} from '@ionic/angular';
+import {SharedService} from '../shared.service';
 
 @Component({
   selector: 'app-local-search',
@@ -14,7 +16,10 @@ export class LocalSearchPage implements OnInit {
   addresses: string[] = [];
   selectedAddress = null;
 
-  constructor(private mapboxSearch: MapboxSearchService, private storageService: StorageService) { }
+  constructor(private mapboxSearch: MapboxSearchService,
+              private storageService: StorageService,
+              private navCtrl: NavController,
+              private sharedService: SharedService) { }
 
   search(event: any) {
     const searchTerm = event.target.value.toLowerCase();
@@ -30,11 +35,17 @@ export class LocalSearchPage implements OnInit {
   }
 
   onSelect(address: string) {
+    console.log('test');
     this.selectedAddress = address;
     this.addresses = [];
 
     // Set location in storage
     this.storageService.set('location', this.selectedAddress);
+
+    this.navCtrl.navigateBack('tabs/account');
+
+    this.sharedService.sendUpdateMap();
+    this.sharedService.sendUpdateLocation();
   }
 
   async ngOnInit() {
