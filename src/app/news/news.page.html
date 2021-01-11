@@ -1,5 +1,9 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Headlines</ion-title>
+    </ion-toolbar>
+</ion-header>
 <ion-content>
-    <h2>Trending</h2>
     <ion-card *ngFor="let article of articles">
         <ion-card-header>
             <ion-card-title style="max-height:30%; font-size:larger;">{{ article.properties.title }}</ion-card-title>
