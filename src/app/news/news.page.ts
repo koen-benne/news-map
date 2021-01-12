@@ -1,8 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { transition } from '../animations/news';
 import * as feed from '../../assets/news-feed.json';
-import { decimalDigest } from '@angular/compiler/src/i18n/digest';
 
 @Component({
   selector: 'app-news',
@@ -17,7 +15,7 @@ export class NewsPage implements OnInit {
   geojson = feed.news;
 
   constructor() {
-    
+
   }
 
   filterTrending() {
